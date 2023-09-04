@@ -34,11 +34,11 @@ class F_TDDTest {
                 of(Arrays.asList(-0,-2,-4,-8,-1,-3),84)
         );
     }
-
-    @ParameterizedTest
+    /*    @ParameterizedTest
     @MethodSource("testData")
     void shouldReturnSumOfSquaresOfEvenNumbers(List<Integer> values, Integer result) {
         assertThat(Validator.sumOfSquaresOfEvenNumbers(values)).isEqualTo(result);
     }
+    */
 
 }

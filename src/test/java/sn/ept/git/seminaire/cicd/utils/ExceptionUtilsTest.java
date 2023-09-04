@@ -1,6 +1,8 @@
 package sn.ept.git.seminaire.cicd.utils;
 
 import org.junit.jupiter.api.Test;
+
+import sn.ept.git.seminaire.cicd.exceptions.ItemExistsException;
 import sn.ept.git.seminaire.cicd.exceptions.ItemNotFoundException;
 
 import java.util.Optional;
@@ -52,5 +54,37 @@ class ExceptionUtilsTest {
                 ItemNotFoundException.class,
                 () -> ExceptionUtils.throwNotFound(template,param)
         );
+    }
+
+    @Test
+    void presentOrThrowShouldThrowItemNotFoundExceptionWhenOptionalIsEmpty() {
+        Optional<Object> optional = Optional.empty();
+        assertThrows(ItemNotFoundException.class,
+                () -> ExceptionUtils.presentOrThrow(optional, "Template"));
+    }
+
+    @Test
+    void presentOrThrowShouldNotThrowWhenOptionalIsPresent() {
+        Optional<Object> optional = Optional.of(new Object());
+        assertDoesNotThrow(() -> ExceptionUtils.presentOrThrow(optional, "Template"));
+    }
+
+    @Test
+    void absentOrThrowShouldThrowItemExistsExceptionWhenOptionalIsPresent() {
+        Optional<Object> optional = Optional.of(new Object());
+        assertThrows(ItemExistsException.class,
+                () -> ExceptionUtils.absentOrThrow(optional, "Template"));
+    }
+
+    @Test
+    void absentOrThrowShouldNotThrowWhenOptionalIsEmpty() {
+        Optional<Object> optional = Optional.empty();
+        assertDoesNotThrow(() -> ExceptionUtils.absentOrThrow(optional, "Template"));
+    }
+
+    @Test
+    void throwNotFoundShouldThrowItemNotFoundException() {
+        assertThrows(ItemNotFoundException.class,
+                () -> ExceptionUtils.throwNotFound("Template"));
     }
 }

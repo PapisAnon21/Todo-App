@@ -7,9 +7,11 @@ import sn.ept.git.seminaire.cicd.exceptions.ItemNotFoundException;
 import sn.ept.git.seminaire.cicd.exceptions.message.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -26,7 +28,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value= { ItemNotFoundException.class })
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    protected ResponseEntity<ErrorMessage> notFound(
+    public ResponseEntity<ErrorMessage> notFound(
             ItemNotFoundException ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 HttpStatus.NOT_FOUND.value(),
@@ -39,7 +41,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value= { ItemExistsException.class })
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    protected ResponseEntity<ErrorMessage> conflict(
+    public ResponseEntity<ErrorMessage> conflict(
             ItemExistsException ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 HttpStatus.CONFLICT.value(),
@@ -52,7 +54,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value= { InvalidException.class })
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    protected ResponseEntity<ErrorMessage> badRequest(
+    public ResponseEntity<ErrorMessage> badRequest(
             InvalidException ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 HttpStatus.BAD_REQUEST.value(),
@@ -63,10 +65,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-
+    /*
     @ExceptionHandler(value= {ForbiddenException.class })
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    protected ResponseEntity<ErrorMessage> permissionDenied(
+    public ResponseEntity<ErrorMessage> permissionDenied(
             ForbiddenException ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 HttpStatus.FORBIDDEN.value(),
@@ -76,10 +78,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         );
         return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
+    */
 
     @ExceptionHandler(value= { Exception.class ,RuntimeException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ResponseEntity<ErrorMessage> internalError(
+    public ResponseEntity<ErrorMessage> internalError(
             Exception ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -91,7 +94,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ExceptionHandler(value= {ResponseStatusException.class })
-    protected ResponseEntity<ErrorMessage> responseStatus(
+    public ResponseEntity<ErrorMessage> responseStatus(
             ResponseStatusException ex, WebRequest request) {
         ErrorMessage message =  ErrorMessage.of(
                 ex.getStatus().value(),
@@ -101,6 +104,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         );
         return new ResponseEntity<>(message,   ex.getStatus());
     }
+
+
 
 
 }

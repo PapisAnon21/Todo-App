@@ -32,7 +32,7 @@ class A_CalculatorTest {
         a = 11;
         b = 22;
     }
-
+    
     @Test
     void testAdd() {
         //preparation

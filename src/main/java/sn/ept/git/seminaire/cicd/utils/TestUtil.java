@@ -29,11 +29,5 @@ public final class TestUtil {
         return mapper.writeValueAsBytes(object);
     }
 
-    public static byte[] createByteArray(int size, String data) {
-        byte[] byteArray = new byte[size];
-        for (int i = 0; i < size; i++) {
-            byteArray[i] = Byte.parseByte(data, 2);
-        }
-        return byteArray;
-    }
+
 }

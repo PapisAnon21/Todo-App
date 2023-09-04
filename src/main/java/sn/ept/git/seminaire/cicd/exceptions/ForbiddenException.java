@@ -15,7 +15,8 @@ public class ForbiddenException extends RuntimeException {
         super(DEFAULT_MSG);
     }
 
-  public ForbiddenException(String message) {
-      super(message);
-  }
+    public ForbiddenException(Throwable cause) {
+        super(cause);
+    }
+
 }

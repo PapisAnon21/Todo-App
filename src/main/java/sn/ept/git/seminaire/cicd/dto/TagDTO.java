@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Data
-@NoArgsConstructor
 public class TagDTO extends TagBaseDTO {
 
 

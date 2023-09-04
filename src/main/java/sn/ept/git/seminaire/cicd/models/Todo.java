@@ -18,7 +18,6 @@ import java.util.Set;
 
 @SuperBuilder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "acicd_todos")
@@ -57,7 +56,6 @@ public class Todo extends BaseEntity implements Serializable {
                 .description(todo.getDescription())
                 .completed(isCompleted())
                 .build();
-
     }
 
 }

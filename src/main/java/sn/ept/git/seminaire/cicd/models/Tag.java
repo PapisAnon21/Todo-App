@@ -18,7 +18,6 @@ import java.util.UUID;
 
 @SuperBuilder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = BaseEntity.CLAUSE)
 

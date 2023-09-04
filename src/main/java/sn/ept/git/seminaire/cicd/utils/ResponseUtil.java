@@ -29,9 +29,11 @@ public final class ResponseUtil {
         return wrapOrNotFound(maybeResponse, null,status,reason);
     }
 
+    /*
     public static <X> ResponseEntity<X> wrapOrNotFound(final Optional<X> maybeResponse,  final String reason) {
         return wrapOrNotFound(maybeResponse, null,HttpStatus.OK,reason);
     }
+    */
 
     public static <X> ResponseEntity<X> wrapOrNotFound(final Optional<X> maybeResponse,final HttpHeaders header, final HttpStatus status) {
         return wrapOrNotFound(maybeResponse, header,status,"");

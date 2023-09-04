@@ -10,12 +10,11 @@ import java.util.Date;
  * @author ISENE
  */
 @Getter
-@Setter
+
 @AllArgsConstructor(staticName = "of")
-@NoArgsConstructor
-@EqualsAndHashCode
+
 @ToString
-@SuperBuilder
+
 public class ErrorMessage {
     private int status;
     private Date timestamp;

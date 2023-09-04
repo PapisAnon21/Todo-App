@@ -18,16 +18,8 @@ public final class Utils {
         return list.stream().anyMatch(item->item.getId().equals(id));
     }
 
-
-    public static  Set<UUID> findAbsentIds(List<? extends BaseEntity> list, Set<UUID> ids ) {
-        return findAbsentIds(list.stream().collect(Collectors.toSet()), ids);
-    }
-
-    public static  Set<UUID> findAbsentIds(Set<? extends BaseEntity> list, Set<UUID> ids ) {
-        return ids
-                .stream()
-                .filter(item->!contains(list,item))
-                .collect(Collectors.toSet());
+    public static class TestBaseEntity extends BaseEntity {
+        // Rien de spécial à mettre ici, c'est principalement utilisé pour créer des instances de test
     }
 
 

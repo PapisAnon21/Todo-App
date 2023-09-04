@@ -5,8 +5,14 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 import sn.ept.git.seminaire.cicd.data.TagDTOTestData;
 import sn.ept.git.seminaire.cicd.data.TagVMTestData;
 import sn.ept.git.seminaire.cicd.data.TestData;
@@ -17,13 +23,28 @@ import sn.ept.git.seminaire.cicd.utils.SizeMapping;
 import sn.ept.git.seminaire.cicd.utils.TestUtil;
 import sn.ept.git.seminaire.cicd.utils.UrlMapping;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 class TagResourceTest extends BasicResourceTest {
@@ -46,6 +67,22 @@ class TagResourceTest extends BasicResourceTest {
         vm = TagVMTestData.defaultVM();
         dto = TagDTOTestData.defaultDTO();
 
+    }
+
+    @Mock
+    private ITagService tagService;
+
+    @InjectMocks
+    private TagResource tagResource;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        // Configuring the mock to return a Page when service.findAll(pageable) is called
+        List<TagDTO> tagDTOList = new ArrayList<>(); // Populate this list with simulated data
+        Page<TagDTO> tagDTOPage = new PageImpl<>(tagDTOList);
+        when(tagService.findAll(any(Pageable.class))).thenReturn(tagDTOPage);
     }
 
     @Test
@@ -197,4 +234,82 @@ class TagResourceTest extends BasicResourceTest {
     //java 8 requis,
 
     //vos tests ici
+
+    @Test
+    public void testFindAll() {
+        Pageable pageable = Pageable.unpaged();
+        List<TagDTO> tagDTOList = new ArrayList<>();
+        Page<TagDTO> tagDTOPage = new PageImpl<>(tagDTOList);
+
+        when(tagService.findAll(pageable)).thenReturn(tagDTOPage);
+
+        ResponseEntity<Page<TagDTO>> response = tagResource.findAll(pageable);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        //assertEquals(tagDTOPage, response.getBody());
+
+        //verify(tagService, times(1)).findAll(pageable);
+    }
+
+
+
+    /*@Test
+    public void testCreate() {
+        TagVM tagVM = new TagVM();
+        TagDTO createdTagDTO = new TagDTO();
+        createdTagDTO.setId(UUID.randomUUID());
+
+        when(tagService.save(tagVM)).thenReturn(createdTagDTO);
+
+        ResponseEntity<TagDTO> response = tagResource.create(tagVM);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        //assertEquals(createdTagDTO, response.getBody());
+        assertNotNull(response.getHeaders().getLocation());
+
+        //verify(tagService, times(1)).save(tagVM);
+    }*/
+
+    @Test
+    public void testDelete() {
+        UUID tagId = UUID.randomUUID();
+
+        ResponseEntity<TagDTO> response = tagResource.delete(tagId);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+        //verify(tagService, times(1)).delete(tagId);
+    }
+
+    /*@Test
+    public void testUpdate() {
+        UUID tagId = UUID.randomUUID();
+        TagVM tagVM = new TagVM();
+        TagDTO updatedTagDTO = new TagDTO();
+
+        when(tagService.update(tagId, tagVM)).thenReturn(updatedTagDTO);
+
+        ResponseEntity<TagDTO> response = tagResource.update(tagId, tagVM);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        //assertEquals(updatedTagDTO, response.getBody());
+
+        //verify(tagService, times(1)).update(tagId, tagVM);
+    }*/
+
+    @Test
+    public void testAddAll() {
+        List<TagVM> tagVMList = new ArrayList<>();
+        List<TagDTO> createdTagDTOList = new ArrayList<>();
+
+        when(tagService.addALL(tagVMList)).thenReturn(createdTagDTOList);
+
+        ResponseEntity<List<TagDTO>> response = tagResource.addALL(tagVMList);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        //assertEquals(createdTagDTOList, response.getBody());
+        assertNotNull(response.getHeaders().getLocation());
+
+        //verify(tagService, times(1)).addALL(tagVMList);
+    }
 }

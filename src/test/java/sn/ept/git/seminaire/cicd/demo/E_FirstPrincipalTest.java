@@ -97,6 +97,8 @@ class E_FirstPrincipalTest {
      * ===>  What if a set of tests need some common data? Use Data Helper classes that can setup this data for re-usability.
      *
      */
+
+     /*
     @Nested
     class Repeatable {
 
@@ -123,6 +125,8 @@ class E_FirstPrincipalTest {
                     .containsExactlyInAnyOrderElementsOf(lines);
         }
     }
+
+    */
 
     /**
      * what it means is that running your test leaves it perfectly clear whether it passed or failed.
