@@ -1,0 +1,57 @@
+name: Todo-App
+
+on:
+  push:
+    branches:
+      - main 
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  build-new-version:
+    runs-on: [self-hosted, linux]
+
+    steps:
+    - name: Extraction de notre repo
+      uses: actions/checkout@v2
+
+    - name: Configuration de JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11' 
+
+    - name: Verification des dependencies (exemple: Maven)
+      run: mvn dependency:analyze
+
+    - name: Exécution des test de l'app todo
+      run: mvn test
+
+    - name: Voir la couverture de test
+      run: mvn sonar:sonar -Dsonar.host.url=<localhost:8000> -Dsonar.login=<votre_token_sonar>
+
+    - name: Vérifier le Quality Gate
+      run: mvn sonar:check -Dsonar.host.url=<localhost:8000> -Dsonar.login=<votre_token_sonar>
+
+    - name: Package de l'application to do
+      run: mvn package
+
+    - name: Créer une release (version)
+      run: |
+        git tag v1.0.1
+        git push --tags
+
+    - name: Déployer vers l'environnement de développement
+      run: |
+        cd /dev_env # repertoir imagée
+        mvn deploy
+
+    - name: Tester le déploiement vers l'environnement de développement
+      run: |
+        mvn compile
+        mvn exec:java
+
+    - name: Notifier les résultats (exemple: Slack, Email, etc.)
+      run: |
+        script_envoi_notif.sh # la on va executer un script qui envoi les notifications au personnes tierces
+
